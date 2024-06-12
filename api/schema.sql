@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS blacklisted_number;
+DROP TABLE IF EXISTS blacklisted_index;
 
-CREATE TABLE blacklisted_number (
-  number INTEGER PRIMARY KEY
+CREATE TABLE blacklisted_index (
+  fib_index INTEGER PRIMARY KEY
 );
