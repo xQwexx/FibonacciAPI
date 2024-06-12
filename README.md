@@ -15,3 +15,5 @@ flask --app api init-db
 Run server:
 flask --app api run --debug
 
+Run test:
+python -m pytest

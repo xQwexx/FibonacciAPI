@@ -50,7 +50,7 @@ class FibonacciCalulator():
         new_index = self._getModifiedIndex(blacklisted, index)
         fib_list = self._calcFibonacciList(new_index)
         filtered_list = []
-        for i in range(0, new_index):
+        for i in range(0, new_index+1):
             if (i not in blacklisted):
                 filtered_list.append(fib_list[i])
         return filtered_list
