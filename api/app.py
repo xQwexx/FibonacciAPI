@@ -27,10 +27,8 @@ def create_app(test_config=None):
 
     from . import db
     db.init_app(app)
-    
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
+
+    from .fibonacci_module import fibonacci
+    app.register_blueprint(fibonacci.bp)
 
     return app
