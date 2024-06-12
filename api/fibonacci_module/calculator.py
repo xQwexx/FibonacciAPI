@@ -10,13 +10,6 @@ class FibPair():
         self.index = index
         self.value = value
 
-    def toJSON(self):
-        return json.dumps(
-            self,
-            default=lambda o: o.__dict__, 
-            sort_keys=True,
-            indent=4)
-
 class FibPairSchema(Schema):
     index = fields.Str()
     value = fields.Str()
@@ -27,8 +20,8 @@ fibpairs_schema = FibPairSchema(many=True)
 class FibonacciCalulator():
     fib_cache = [FibPair(0, 0), FibPair(1, 1)]
 
-    def calcFibonacci(self, index: int) -> FibPair:
-        return self.calcFibonacciList(index)[index]
+    def _calcFibonacci(self, index: int) -> FibPair:
+        return self._calcFibonacciList(index)[index]
 
     def _calcFibonacciList(self, index: int) -> list[FibPair]:
         if index < 0:
@@ -37,14 +30,30 @@ class FibonacciCalulator():
         elif index < len(self.fib_cache):
             return self.fib_cache[:index + 1]
         else:        
-            self.fib_cache.append(FibPair(index, self.calcFibonacci(index - 1).value + self.calcFibonacci(index - 2).value))
+            self.fib_cache.append(FibPair(index, self._calcFibonacci(index - 1).value + self._calcFibonacci(index - 2).value))
             return self.fib_cache
 
+    def _getModifiedIndex(self, blacklisted: list[int], index: int):
+        for i in sorted(blacklisted):
+            if (i <= index):
+                index += 1
+            else:
+                break
+        return index
+
+    def calcFibonacci(self, index: int) -> FibPair:
+        return self.calcFibonacciList(index)[index]
 
     def calcFibonacciList(self, index: int) -> list[FibPair]:
         blacklisted = self.getBlacklistedIndexes()
         print(blacklisted)
-        return self._calcFibonacciList(index)
+        new_index = self._getModifiedIndex(blacklisted, index)
+        fib_list = self._calcFibonacciList(new_index)
+        filtered_list = []
+        for i in range(0, new_index):
+            if (i not in blacklisted):
+                filtered_list.append(fib_list[i])
+        return filtered_list
 
     def getBlacklistedIndexes(self):
         db = get_db()
